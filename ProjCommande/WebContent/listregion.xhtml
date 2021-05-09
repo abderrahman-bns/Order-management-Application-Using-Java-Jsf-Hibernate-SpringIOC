@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+	<ui:composition template="/WEB-INF/template/template.xhtml">
+		<ui:define name="content">
+			<h:form id="formRegion1">
+				<p:growl id="growl" showDetail="true" sticky="true" life="3000" />
+
+				<p:panel id="toggleable" header="Ajouter Region" toggleable="true"
+					toggleSpeed="1000" style="margin-bottom:40px; margin-bottom:20px;">
+
+					<div class="p-grid p-dir-col-rev">
+					    <div class="p-col" style="margin-bottom: 10px;">
+					        <p:outputLabel value="Nom de Region : " for="nomreg" />
+							<p:inputText value="#{beanRegion.reg.nomregion}" id="nomreg" required="true" requiredMessage="Nom de region de vide"/>
+					    </div>
+					    <div class="p-col" style="margin-bottom: 10px;">
+					        <p:outputLabel value="Nombre d'habitat : " for="nombrehabitat" />
+							<p:inputNumber value="#{beanRegion.reg.nbHabitant}" id="nombrehabitat" required="true" requiredMessage="Nombre n'est pas renseigne"/>
+					    </div>
+					    <div class="p-col" style="margin-bottom: 10px;">
+					        <p:commandButton value="Enregistrer" icon="pi pi-save" action="#{beanRegion.save()}" update=":formRegion1 :formRegion2"/>
+					    </div>
+					</div>
+				</p:panel>
+			</h:form>
+			<h:form id="formRegion2">
+			
+				<p:growl id="growl" showDetail="true" sticky="true" life="3000" />
+				
+				<p:dataTable value="#{beanRegion.listRegions}" var="r"
+					paginator="true" rows="10" id="tableregion" selectionMode="single" selection="#{beanRegion.selectedRegion}" rowKey="#{r.numreg}">
+					<f:facet name="header">Liste des regions</f:facet>
+					<p:column headerText="Numero">
+						#{r.numreg}
+					</p:column>
+	
+					<p:column headerText="Nom">
+						#{r.nomregion}
+					</p:column>
+	
+					<p:column headerText="Nombre d'habitat">
+						#{r.nbHabitant}
+					</p:column>
+				
+				</p:dataTable>
+				
+				<p:contextMenu for="tableregion">
+					<p:menuitem value="Modifier" icon="pi pi-user-edit"  oncomplete="PF('dlg').show();" update=":formRegion3:panelregion"/>
+			        <p:menuitem value="Supprimer" icon="pi pi-trash" update=":formRegion2" action="#{beanRegion.delete()}">
+			        	<p:confirm header="Confirmation de suppression" message="Voulez-vous supprimer cette region?" icon="pi pi-exclamation-triangle" />
+			        </p:menuitem>
+    			</p:contextMenu>
+    			
+    			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"> 
+			        <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			        <p:commandButton value="Non" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+			    </p:confirmDialog>
+			</h:form>
+			<h:form id="formRegion3">
+			
+				<p:growl id="growl" showDetail="true" sticky="true" life="3000" />
+				
+			    <p:dialog header="Modification Region" widgetVar="dlg" resizable="false">
+			        <h:panelGrid id="panelregion" columns="2" cellpadding="5">
+			            <h:outputLabel for="nomr" value="Nom de region : " />
+			            <p:inputText id="nomr" value="#{beanRegion.selectedRegion.nomregion}" required="true" label="Nom de region"  />
+			             
+			            <h:outputLabel for="nbhr" value="Nombre d'habitat : " />
+			            <p:inputText id="nbhr" value="#{beanRegion.selectedRegion.nbHabitant}" required="true" label="Nombre d'habitat" />
+			             
+			            <f:facet name="footer">
+			                <p:commandButton value="Mettre a jour" update="growl :formRegion2:tableregion" action="#{beanRegion.update()}" oncomplete="handleLoginRequest(xhr, status, args);" />
+			                <p:commandButton value="Annuler" onclick="PF('dlg').hide();" />
+			            </f:facet>  
+			        </h:panelGrid>
+			    </p:dialog>    
+			</h:form>
+			<script type="text/javascript">
+		    function handleLoginRequest(xhr, status, args) {
+		        if(args.validationFailed || !args.loggedIn) {
+		            PF('dlg').jq.effect("shake", {times:5}, 100);
+		        }else {
+		        	PF('dlg').hide();
+			    }
+		    }
+		</script>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

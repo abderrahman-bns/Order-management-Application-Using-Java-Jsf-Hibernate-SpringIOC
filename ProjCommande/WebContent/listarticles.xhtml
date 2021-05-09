@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head> 
+<body> 
+
+	<ui:composition template="/WEB-INF/template/template.xhtml">
+		<ui:define name="content">
+			
+			<p:dataTable value="#{beanArticle.listArticles}" var="a" paginator="true" rows="10">
+				<f:facet name="header">Liste des articles</f:facet>
+				<p:column headerText="Numero">
+					#{a.numart}
+				</p:column>
+				
+				<p:column headerText="Libelle">
+					#{a.libart}
+				</p:column>
+				
+				<p:column headerText="Prix unitaire">
+					<p:outputLabel value="#{a.prix_unitaire}">
+						<f:convertNumber type="currency" currencySymbol="MAD " minFractionDigits="2" />
+					</p:outputLabel>
+				</p:column>
+				
+			</p:dataTable>
+		</ui:define>
+	</ui:composition>
+	
+</body> 
+</html>
